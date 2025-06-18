@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /build
+/test
 
 # Logs
 logs
@@ -57,3 +58,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # prisma
 /generated/prisma
+
+#Docker
+docker-compose.yml
