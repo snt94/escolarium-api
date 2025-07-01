@@ -3,10 +3,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon2 from 'argon2';
 import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private jwt: JwtService,
+        private config: ConfigService,
+    ) { }
 
     async signup(dto: AuthDto) {
 
@@ -21,19 +27,25 @@ export class AuthService {
                 },
 
                 select: {
+                    schoolId: true,
                     id: true,
                     email: true,
                     createdAt: true,
                 }
             });
 
-            return user;
+            return this.signToken(user.id, user.email, user.schoolId)
 
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
                     throw new ForbiddenException(
                         'Este email já está sendo usado'
+                    );
+                }
+                if (error.code === 'P2003') {
+                    throw new ForbiddenException(
+                        'A escola do usuário não foi encontrada'
                     );
                 }
             }
@@ -61,6 +73,32 @@ export class AuthService {
             'Credenciais incorretas'
         )
 
-        return { msg: 'Estou logado!' };
+        return this.signToken(user.id, user.email, user.schoolId)
+    }
+
+    async signToken(
+        userId: number,
+        email: string,
+        schoolId: string,
+
+    ): Promise<{ access_token: string }> {
+        const payload = {
+            sub: userId,
+            schoolId,
+            email,
+        };
+
+        const secret = this.config.getOrThrow('JWT_SECRET');
+
+        const token = await this.jwt.signAsync(payload,
+            {
+                expiresIn: '25m',
+                secret: secret,
+            },
+        );
+
+        return {
+            access_token: token,
+        };
     }
 }
