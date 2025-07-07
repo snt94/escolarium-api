@@ -6,7 +6,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Configuração global de validação
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -15,12 +14,11 @@ async function bootstrap() {
     }),
   );
 
-  // Configuração do Swagger
   const config = new DocumentBuilder()
     .setTitle('API Gestão Educacional')
-    .setDescription('Documentação interativa da API do seu SaaS')
+    .setDescription('Documentação interativa do Escolarium')
     .setVersion('1.0')
-    .addBearerAuth() // Se você usa autenticação JWT
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

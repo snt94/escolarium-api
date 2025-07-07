@@ -1,98 +1,163 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> Backend robusto e escalável construído com NestJS, Prisma ORM e focado em segurança, qualidade e produtividade.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Tecnologias Utilizadas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **NestJS**: Framework Node.js para construir aplicações escaláveis e manuteníveis.
+- **Prisma**: ORM para Node.js e TypeScript, com foco em produtividade e segurança de tipos.
+- **PostgreSQL**: Banco de dados relacional, rodando via container Docker para desenvolvimento.
+- **Docker & Docker Compose**: Para ambiente isolado e consistente.
+- **Jest**: Framework de testes para JavaScript/TypeScript.
+- **Swagger**: Documentação interativa da API.
 
-## Project setup
+---
+
+## Pré-requisitos
+
+- Node.js v18 ou superior
+- Docker e Docker Compose instalados
+- npm (ou yarn) instalado
+
+---
+
+## Instalação e Configuração
 
 ```bash
-$ npm install
+# Clone o repositório
+git clone <> backend
+cd backend
+
+# Instale as dependências
+npm install
+
+# Suba o banco de dados PostgreSQL via Docker Compose
+npm run db:dev:up
+
+# Execute as migrações do Prisma
+npm run prisma:dev:deploy
 ```
 
-## Compile and run the project
+---
+
+## Scripts disponíveis
+
+| Comando                     | Descrição                                                 |
+| --------------------------- | --------------------------------------------------------- |
+| `npm run start`             | Inicia a aplicação em modo produção                       |
+| `npm run start:dev`         | Inicia a aplicação em modo desenvolvimento com hot-reload |
+| `npm run start:debug`       | Inicia em modo debug com hot-reload                       |
+| `npm run build`             | Compila o código TypeScript                               |
+| `npm run lint`              | Verifica e corrige problemas de lint                      |
+| `npm run format`            | Formata o código com Prettier                             |
+| `npm run test`              | Executa os testes unitários                               |
+| `npm run test:watch`        | Executa os testes em modo watch                           |
+| `npm run test:cov`          | Executa os testes e gera relatório de cobertura           |
+| `npm run test:e2e`          | Executa os testes end-to-end                              |
+| `npm run db:dev:up`         | Sobe o container Docker com o banco PostgreSQL            |
+| `npm run db:dev:rm`         | Remove o container Docker do banco                        |
+| `npm run db:dev:restart`    | Remove e sobe o container e aplica migrações              |
+| `npm run prisma:dev:deploy` | Aplica as migrações do banco via Prisma                   |
+
+---
+
+## Estrutura do Projeto
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+src/
+├── main.ts                 # Ponto de entrada da aplicação
+├── app.module.ts           # Módulo raiz da aplicação
+├── modules/                # Módulos organizados por domínio
+│   ├── auth/               # Autenticação e autorização
+│   ├── users/              # Gestão de usuários
+│   └── ...                 # Outros módulos específicos
+├── prisma/                 # Cliente Prisma e migrações
+test/                       # Testes end-to-end
 ```
 
-## Run tests
+## Testes
+
+- Testes unitários e integração com Jest.
+- Comandos:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run test          # roda todos os testes
+npm run test:watch    # roda testes em modo watch
+npm run test:cov      # gera relatório de cobertura
+npm run test:e2e      # testes end-to-end
 ```
 
-## Deployment
+## Banco de dados
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- Utilizamos PostgreSQL em container Docker para ambiente de desenvolvimento, gerenciado via Docker Compose.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Para subir o banco:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run db:dev:up
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Para remover o container:
 
-## Resources
+```bash
+npm run db:dev:rm
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Para reiniciar o banco e aplicar migrações:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run db:dev:restart
+```
 
-## Support
+Migrações gerenciadas pelo Prisma:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run prisma:dev:deploy
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Documentação da API
 
-## License
+A API está documentada via Swagger e pode ser acessada em:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+http://localhost:3000/api
+```
+Lá você poderá:
+
+- Visualizar os endpoints disponíveis
+- Testar requisições interativamente
+- Consultar modelos de dados e respostas
+
+---
+
+## Como contribuir
+
+1. Faça um fork deste repositório
+
+2. Crie uma branch com sua feature: git checkout -b feature/nome-da-feature
+
+3. Faça commit das suas alterações: git commit -m "Descrição da feature"
+
+4. Envie para o repositório remoto: git push origin feature/nome-da-feature
+
+5. Abra um Pull Request
+
+---
+
+## Licença
+
+- Este projeto está sob licença UNLICENSED — consulte o proprietário para permissões.
+
+--- 
+
+## Contato
+
+Para dúvidas ou sugestões, entre em contato comigo.
+
+--- 
+
+## Obrigado por utilizar este backend NestJS!
