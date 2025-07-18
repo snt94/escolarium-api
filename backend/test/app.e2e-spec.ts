@@ -6,12 +6,19 @@ import { PrismaService } from '../src/prisma/prisma.service';
 
 describe('Escolarium e2e', () => {
   let app: INestApplication;
-  let prisma: PrismaService; // TEMPORÁRIO -- Retirar quando implementar volume Docker de teste
+  let prisma: PrismaService;
+
+  const schoolInfo = {
+    schoolId: '6e4be9d1-a84e-4fc7-98c9-8add04f2729c',
+    name: 'Escola de Teste',
+    cnpj: '12.345.678/0001-99',
+    address: 'Rua dos Testes, 123 - São Paulo, SP',
+  }
 
   const authDto = { // Objeto de usuário fictício
     email: 'teste@email.com',
     password: '123456',
-    schoolId: '6e4be9d1-a84e-4fc7-98c9-8add04f2729c',
+    schoolId: schoolInfo.schoolId,
   };
 
   beforeAll(async () => {
@@ -32,6 +39,17 @@ describe('Escolarium e2e', () => {
     await app.listen(3000);
 
     prisma = app.get(PrismaService);
+
+    await prisma.school.upsert({
+      where: { id: authDto.schoolId },
+      update: {}, // pode atualizar campos se quiser
+      create: {
+        id: authDto.schoolId,
+        name: schoolInfo.name,
+        cnpj: schoolInfo.cnpj,
+        address: schoolInfo.address,
+      },
+    });
 
     pactum.request.setBaseUrl('http://localhost:3000');
   });
@@ -80,7 +98,7 @@ describe('Escolarium e2e', () => {
           email: authDto.email,
           password: authDto.password,
         })
-        .expectStatus(201)
+        .expectStatus(200)
         .stores('userAccessToken', 'access_token') // reusa token mais adiante se quiser
         .expectJsonLike({
           access_token: /.*/,
@@ -130,11 +148,16 @@ describe('Escolarium e2e', () => {
     });
   });
 
-  describe('Cleanup - Usuário de teste', () => {
-    it('deve deletar o usuário criado no teste', async () => {
-      await prisma.user.delete({
+  describe('Cleanup database', () => {
+    it('deve deletar os dados criados no teste', async () => {
+
+      await prisma.user.deleteMany({
         where: { email: authDto.email },
+      });
+      await prisma.school.deleteMany({
+        where: { id: schoolInfo.schoolId },
       });
     });
   });
+
 });
