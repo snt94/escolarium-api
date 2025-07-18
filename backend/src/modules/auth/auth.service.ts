@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dto';
+import { SignInDto, SignUpDto } from './dto';
 import * as argon2 from 'argon2';
 import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +14,7 @@ export class AuthService {
         private config: ConfigService,
     ) { }
 
-    async signup(dto: AuthDto) {
+    async signup(dto: SignUpDto) {
 
         const hash = await argon2.hash(dto.password);
 
@@ -34,7 +34,7 @@ export class AuthService {
                 }
             });
 
-            return this.signToken(user.id, user.email, user.schoolId)
+            return this.signToken(user.id, user.email)
 
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
@@ -53,7 +53,7 @@ export class AuthService {
         };
     };
 
-    async signin(dto: AuthDto) {
+    async signin(dto: SignInDto) {
 
         const user = await this.prisma.user.findUnique({
             where: {
@@ -73,18 +73,17 @@ export class AuthService {
             'Credenciais incorretas'
         )
 
-        return this.signToken(user.id, user.email, user.schoolId)
+        return this.signToken(user.id, user.email, )
     }
 
     async signToken(
         userId: number,
         email: string,
-        schoolId: string,
+        
 
     ): Promise<{ access_token: string }> {
         const payload = {
             sub: userId,
-            schoolId,
             email,
         };
 

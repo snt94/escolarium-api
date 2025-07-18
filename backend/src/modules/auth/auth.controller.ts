@@ -1,18 +1,23 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { SignUpDto, SignInDto } from './dto';
+import { ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger'
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('signup')
-    signup(@Body() dto: AuthDto) {
+    @ApiOperation({ summary: 'Criar um novo usuário' })
+    @ApiResponse({ status: 201, description: 'Usuário criado com sucesso.' })
+    signup(@Body() dto: SignUpDto) {
         return this.authService.signup(dto);
     }
-
+    @ApiOperation({ summary: 'Login em usuário' })
+    @ApiResponse({ status: 200, description: 'Login realizado com sucesso.' })
     @Post('signin')
-    signin(@Body() dto: AuthDto) {
+    signin(@Body() dto: SignInDto) {
         return this.authService.signin(dto);
     }
 }
