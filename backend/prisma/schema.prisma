@@ -9,12 +9,12 @@ datasource db {
 }
 
 model School {
-  id             String          @id @default(uuid())
-  name           String
-  cnpj           String
-  address        String
-  createdAt      DateTime        @default(now())
-  
+  id        String   @id @default(uuid())
+  name      String
+  cnpj      String
+  address   String
+  createdAt DateTime @default(now())
+
   users          User[]
   classes        Class[]
   communications Communication[]
@@ -41,6 +41,7 @@ model User {
   school           School          @relation(fields: [schoolId], references: [id])
   student          Student?
   teacher          Teacher?
+  coordinator      Coordinator?
   guardian         Guardian?
   notifications    Notification[]
   messagesSent     Message[]       @relation("SentMessages")
@@ -49,6 +50,22 @@ model User {
   Communication    Communication[]
 
   @@map("users")
+}
+
+model Coordinator {
+  id     String  @id @default(uuid())
+  name   String
+  userId Int  @unique
+  user   User  @relation(fields: [userId],  references: [id], onDelete: Cascade)
+  school String? // exemplo de campo extra
+}
+
+enum Role {
+  STUDENT
+  GUARDIAN
+  TEACHER
+  COORDINATOR
+  ADMIN
 }
 
 model Student {
