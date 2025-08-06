@@ -1,4 +1,4 @@
-# Backend NestJS
+# Escolarium-Api
 
 > Backend robusto e escalável construído com NestJS, Prisma ORM e focado em segurança, qualidade e produtividade.
 
