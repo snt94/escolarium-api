@@ -1,5 +1,9 @@
 import { Type } from "class-transformer";
 import { IsEmail, IsString, IsEnum, ValidateNested } from "class-validator";
+import { CreateCoordinatorDto } from 'src/modules/coordinator/dto/create-coordinator.dto';
+import { CreateStudentDto } from 'src/modules/student/dto';
+import { CreateTeacherDto } from 'src/modules/teacher/dto/create-teacher.dto';
+import { Role } from "generated/prisma";
 
 export class CreateUserDto {
     @IsEmail()
@@ -11,7 +15,7 @@ export class CreateUserDto {
     @IsString()
     schoolId: string;
     
-    @IsEnum(Role)
+    @IsEnum(Role, { message: 'Cargo Inválido.'})
     role: Role;
 
     @ValidateNested()
