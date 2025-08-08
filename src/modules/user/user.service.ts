@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "prisma/prisma.service";
 import { CreateUserDto, UpdateUserDto } from "./dto";
+import { UserRole } from "common/enums/user-role.enum";
 @Injectable()
 export class UserService {
 
@@ -32,13 +33,13 @@ export class UserService {
         });
 
         switch (role) {
-            case role.STUDENT:
+            case UserRole.STUDENT:
                 await this.studentService.create(user.id, dto.student);
                 break;
-            case role.TEACHER:
+            case UserRole.TEACHER:
                 await this.teacherService.create(user.id, dto.teacher);
                 break;
-            case role.COORDINATOR:
+            case UserRole.COORDINATOR:
                 await this.coordinatorService.create(user.id, dto.coordinator);
                 break;
         }
