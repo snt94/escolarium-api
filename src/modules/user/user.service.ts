@@ -2,14 +2,18 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "prisma/prisma.service";
 import { CreateUserDto, UpdateUserDto } from "./dto";
 import { UserRole } from "common/enums/user-role.enum";
+import { StudentService } from "modules/student/student.service";
+import { TeacherService } from "modules/teacher/teacher.service";
+import { CoordinatorService } from "modules/coordinator/coordinator.service";
 @Injectable()
 export class UserService {
 
-    studentService: any;
-    teacherService: any;
-    coordinatorService: any;
-
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly student: StudentService,
+        private readonly teacher: TeacherService,
+        private readonly coordinator: CoordinatorService,
+    ) { }
 
     async findAll() {
         return this.prisma.user.findMany();
@@ -34,13 +38,13 @@ export class UserService {
 
         switch (role) {
             case UserRole.STUDENT:
-                await this.studentService.create(user.id, dto.student);
+                await this.student.create(user.id, dto.student);
                 break;
             case UserRole.TEACHER:
-                await this.teacherService.create(user.id, dto.teacher);
+                await this.teacher.create(user.id, dto.teacher);
                 break;
             case UserRole.COORDINATOR:
-                await this.coordinatorService.create(user.id, dto.coordinator);
+                await this.coordinator.create(user.id, dto.coordinator);
                 break;
         }
 

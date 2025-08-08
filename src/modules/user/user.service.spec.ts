@@ -1,14 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaService } from 'prisma/prisma.service';
+import { TeacherService } from '../teacher/teacher.service'
+import { StudentService } from '../student/student.service'
 import { UserRole } from 'common/enums/user-role.enum';
-// Mock do PrismaService
+import { CoordinatorService } from 'modules/coordinator/coordinator.service';
+
+// Mocks
 const mockPrisma = {
     user: {
         create: jest.fn(),
         findUnique: jest.fn(),
     },
-    // outras funções que você usa...
+};
+const mockStudentService = {
+    create: jest.fn(),
+};
+
+const mockTeacherService = {
+    create: jest.fn(),
+};
+
+const mockCoordinatorService = {
+    create: jest.fn(),
 };
 
 describe('UserService', () => {
@@ -19,6 +33,9 @@ describe('UserService', () => {
             providers: [
                 UserService,
                 { provide: PrismaService, useValue: mockPrisma },
+                { provide: TeacherService, useValue: mockTeacherService },
+                { provide: StudentService, useValue: mockStudentService },
+                { provide: CoordinatorService, useValue: mockCoordinatorService },
                 // mock outros services se necessário
             ],
         }).compile();
@@ -41,13 +58,11 @@ describe('UserService', () => {
             student: {}
         };
 
-        // Act
         const user = await service.create(dto);
 
-        // Assert
         expect(user).toHaveProperty('id', 'user-id');
         expect(mockPrisma.user.create).toHaveBeenCalledTimes(1);
-        // verificar chamadas aos serviços de criação dos perfis
+        expect(mockStudentService.create).toHaveBeenCalledWith('user-id', dto.student);  // verifica se chamou o mock
     });
 
 });
