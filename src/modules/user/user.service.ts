@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "prisma/prisma.service";
 import { CreateUserDto, UpdateUserDto } from "./dto";
 import { UserRole } from "common/enums/user-role.enum";
@@ -26,6 +26,16 @@ export class UserService {
     async create(dto: CreateUserDto) {
 
         const { email, hash, role, schoolId } = dto;
+
+        // Validação manual para o teste unitário
+        // Validações manuais necessárias no unitário
+        if (!dto.email || !dto.hash || !dto.schoolId) {
+            throw new BadRequestException('Missing required fields');
+        }
+
+        if (!Object.values(UserRole).includes(dto.role as UserRole)) {
+            throw new BadRequestException(`Invalid role: ${dto.role}`);
+        }
 
         const user = await this.prisma.user.create({
             data: {
