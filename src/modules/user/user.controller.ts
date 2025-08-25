@@ -4,8 +4,10 @@ import { GetUser } from "./decorators/get-user.decorator";
 import { User } from "@prisma/client";
 import { CreateUserDto, UpdateUserDto } from "./dto";
 import { UserService } from "./user.service";
+import { ApiTags } from "@nestjs/swagger";
 
 @UseGuards(JwtGuard)
+@ApiTags('User')
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) { }
